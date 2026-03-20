@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give Role & Mission</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/index-D6jp5Vhq.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DZntkz_-.css">
+</head>
+<body>
+  <!-- パーティクル背景 -->
+  <div id="tsparticles"></div>
+
+  <!-- 立ち絵背景 -->
+  <div class="character-container">
+    <img src="/images/villager.png" alt="" class="character-bg char-1" />
+    <img src="/images/werewolf.png" alt="" class="character-bg char-2" />
+    <img src="/images/seer.png" alt="" class="character-bg char-3" />
+    <img src="/images/knight.png" alt="" class="character-bg char-4" />
+  </div>
+
+  <!-- トースト通知コンテナ -->
+  <div id="toast-container"></div>
+
+  <!-- 復帰バナー -->
+  <div id="rejoin-banner" class="hidden">ゲームに復帰しました</div>
+
+  <!-- アプリ本体コンテナ -->
+  <main id="app-container">
+    
+    <!-- ====== LOBBY (ホーム画面) ====== -->
+    <section id="lobby-screen" class="screen active">
+      <header>
+        <h1 class="glitch-title" data-text="GIVE ROLE & MISSION">GIVE ROLE & MISSION</h1>
+        <div class="header-controls">
+          <div id="connection-status">👥 0人参加中</div>
+          <div class="preset-dropdown-container">
+            <button id="preset-toggle-btn" class="preset-btn">プリセット ▼</button>
+            <div id="preset-menu" class="preset-menu hidden">
+              <button id="preset-save-btn">新しいプリセットとして保存</button>
+              <hr />
+              <ul id="preset-list">
+                <!-- JSで動的に追加 -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="lobby-content">
+        <!-- ミッションボックス -->
+        <div class="box-container card mission-box-container">
+          <div class="box-header">
+            <h2>🎯 ミッションボックス <span id="mission-count">[0件]</span></h2>
+          </div>
+          <ul id="mission-list" class="item-list"></ul>
+          <div class="box-input-area">
+            <input type="text" id="mission-input" placeholder="ミッションを入力..." />
+            <button id="mission-add-btn">＋ 追加</button>
+          </div>
+        </div>
+
+        <!-- ロールボックス -->
+        <div class="box-container card role-box-container">
+          <div class="box-header">
+            <h2>🎭 ロールボックス <span id="role-count-info">[ロール 0件 / 現在 0人接続中]</span></h2>
+          </div>
+          <ul id="role-list" class="item-list"></ul>
+          <div class="box-input-area">
+            <input type="text" id="role-input" placeholder="ロールを入力..." />
+            <button id="role-add-btn">＋ 追加</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="lobby-actions">
+        <!-- ホストのみ表示、かつサーバーから受け取った時点で表示 -->
+        <button id="game-start-btn" class="primary-btn hidden">▶ ゲーム開始</button>
+        <button id="game-rejoin-btn" class="rejoin-btn hidden">↩ ゲームに復帰</button>
+      </div>
+    </section>
+
+    <!-- ====== LOTTERY (抽選アニメーション画面) ====== -->
+    <section id="lottery-screen" class="screen hidden">
+      <div id="lottery-card" class="lottery-card card">
+        <div class="lottery-card-inner">
+          <div class="lottery-card-front">
+            <!-- 抽選完了時、ここにミッションが表示される -->
+            <h2 id="lottery-mission-text"></h2>
+          </div>
+          <div class="lottery-card-back">
+            <div class="slot-machine">
+              <ul id="slot-reel">
+                <!-- JSで高速スクロールアニメーション用のリストを生成 -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== RESULT (リザルト画面) ====== -->
+    <section id="result-screen" class="screen hidden">
+      <div class="result-content card">
+        <h3>全プレイヤー共通ミッション</h3>
+        <p id="result-mission-text" class="result-mission">ミッション内容</p>
+        
+        <hr class="result-divider" />
+        
+        <h3>あなたのロール</h3>
+        <!-- ロールがある場合とない場合（スナップショット外）で表示を分ける -->
+        <h1 id="result-role-text" class="result-role">あなたの役職</h1>
+        <p id="result-no-role-text" class="result-role hidden">※今回は参加していません</p>
+        
+        <div class="result-actions">
+          <!-- ホストのみ表示 -->
+          <button id="game-reset-btn" class="secondary-btn hidden">◀ ロビーに戻る</button>
+          <p id="waiting-reset-text" class="waiting-text hidden">ホストがリセットするのを待っています...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- モーダルダイアログコンテナ -->
+  <div id="modal-container" class="modal-overlay hidden">
+    <div class="modal-content card">
+      <h3 id="modal-title">タイトル</h3>
+      <div id="modal-body">本文</div>
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="secondary-btn">キャンセル</button>
+        <button id="modal-confirm-btn" class="primary-btn">OK</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

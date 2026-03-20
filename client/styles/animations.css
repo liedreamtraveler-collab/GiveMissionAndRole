@@ -1,0 +1,75 @@
+/* グリッチエフェクト */
+@keyframes glitch {
+  0%, 100% { text-shadow: none; transform: none; }
+  20% { text-shadow: 3px 0 var(--color-accent-2), -3px 0 var(--color-accent-1); transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { text-shadow: -3px 0 var(--color-accent-2), 3px 0 var(--color-accent-1); transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+.glitch-title {
+  position: relative;
+  display: inline-block;
+  /* JSでランダムに animation プロパティを付与する */
+}
+.glitch-title::before, .glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0.8;
+}
+.glitch-title::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--color-accent-1);
+  clip: rect(24px, 550px, 90px, 0);
+  background: var(--color-bg);
+  animation: glitch-anim 3s infinite linear alternate-reverse;
+  z-index: -1;
+}
+.glitch-title::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--color-accent-2);
+  clip: rect(85px, 550px, 140px, 0);
+  background: var(--color-bg);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+  z-index: -2;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(10px, 9999px, 83px, 0); }
+  20% { clip: rect(66px, 9999px, 82px, 0); }
+  40% { clip: rect(51px, 9999px, 20px, 0); }
+  60% { clip: rect(72px, 9999px, 98px, 0); }
+  80% { clip: rect(98px, 9999px, 73px, 0); }
+  100% { clip: rect(69px, 9999px, 62px, 0); }
+}
+
+/* オーロラボーダー */
+@keyframes aurora {
+  0%   { border-color: rgba(0, 240, 255, 0.5); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.05); }
+  50%  { border-color: rgba(255, 0, 85, 0.5); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 0, 85, 0.1); }
+  100% { border-color: rgba(0, 240, 255, 0.5); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.05); }
+}
+.card {
+  animation: aurora 6s ease-in-out infinite;
+}
+
+/* 通知系のスライドイン/アウト */
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* リストアイテムのホバーアクション */
+.item-list li {
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.item-list li:hover {
+  transform: translateX(4px);
+  background: rgba(255, 255, 255, 0.05);
+}

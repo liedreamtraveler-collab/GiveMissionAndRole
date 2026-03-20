@@ -1,0 +1,18 @@
+:root {
+  --color-bg:          #090e1a;   /* ベース背景 */
+  --color-surface:     #111827;   /* カード背景 */
+  --color-card:        #1c2333;   /* ボックス背景 */
+  --color-border:      #2d3748;   /* ボーダー */
+  --color-accent-1:    #7c3aed;   /* パープル（メインアクセント） */
+  --color-accent-2:    #06b6d4;   /* シアン（サブアクセント） */
+  --color-accent-glow: rgba(124, 58, 237, 0.4);  /* グロウ用 */
+  --color-text:        #f1f5f9;   /* メインテキスト */
+  --color-text-sub:    #94a3b8;   /* サブテキスト */
+  --color-error:       #ef4444;
+  --color-success:     #10b981;
+  --color-warning:     #f59e0b;
+  --color-reconnect:   #f59e0b;   /* 復帰待ち表示色 */
+
+  --font-title: 'Cinzel', serif;
+  --font-body: 'Inter', sans-serif;
+}

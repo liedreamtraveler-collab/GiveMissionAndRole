@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Give Role & Mission</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/variables.css" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/animations.css" />
+  <link rel="stylesheet" href="/styles/home.css" />
+  <link rel="stylesheet" href="/styles/result.css" />
+</head>
+<body>
+  <!-- パーティクル背景 -->
+  <div id="tsparticles"></div>
+
+  <!-- 立ち絵背景 (削除済) -->
+  <div class="character-container">
+  </div>
+
+  <!-- トースト通知コンテナ -->
+  <div id="toast-container"></div>
+
+  <!-- 復帰バナー -->
+  <div id="rejoin-banner" class="hidden">ゲームに復帰しました</div>
+
+  <!-- アプリ本体コンテナ -->
+  <main id="app-container">
+    
+    <!-- ====== CONNECT (接続画面) ====== -->
+    <section id="connect-screen" class="screen active">
+      <div class="connect-container card glass-panel">
+        <h1 class="glitch-title connect-title" data-text="GIVE ROLE & MISSION">GIVE ROLE & MISSION</h1>
+        <p class="connect-subtitle">P2P Serverless Werewolf Tool</p>
+        
+        <div class="connect-actions">
+          <div class="host-section">
+            <h3>ルームを作る</h3>
+            <button id="room-create-btn" class="primary-btn pulse-anim">👑 ホストとして部屋を作成</button>
+          </div>
+          
+          <div class="divider"><span>OR</span></div>
+          
+          <div class="guest-section">
+            <h3>ルームに参加する</h3>
+            <input type="text" id="room-join-input" placeholder="Room ID を入力..." />
+            <button id="room-join-btn" class="secondary-btn">🚪 部屋に参加</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== LOBBY (ホーム画面) ====== -->
+    <section id="lobby-screen" class="screen hidden">
+      <header>
+        <h1 class="glitch-title" data-text="GIVE ROLE & MISSION">GIVE ROLE & MISSION</h1>
+        <div class="header-controls">
+          <div id="room-id-display" style="font-weight:bold; margin-bottom:4px;">Not Connected</div>
+          <div id="connection-status">👥 0人参加中</div>
+          <div class="preset-dropdown-container">
+            <button id="preset-toggle-btn" class="preset-btn">プリセット ▼</button>
+            <div id="preset-menu" class="preset-menu hidden">
+              <button id="preset-save-btn">新しいプリセットとして保存</button>
+              <hr />
+              <ul id="preset-list">
+                <!-- JSで動的に追加 -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="lobby-content">
+        <!-- ミッションボックス -->
+        <div class="box-container card mission-box-container">
+          <div class="box-header">
+            <h2>🎯 Mission Box <span id="mission-count">[0件]</span></h2>
+          </div>
+          <ul id="mission-list" class="item-list"></ul>
+          <div class="box-input-area">
+            <input type="text" id="mission-input" placeholder="ミッションを入力..." />
+            <button id="mission-add-btn">＋ 追加</button>
+          </div>
+          <div style="margin-top: 10px; display: flex; align-items: center; justify-content: flex-end;">
+            <label style="cursor: pointer;">
+              <input type="checkbox" id="mission-public-toggle" checked /> 
+              全員に公開する
+            </label>
+          </div>
+        </div>
+
+        <!-- Citizenボックス -->
+        <div class="box-container card role-box-container">
+          <div class="box-header">
+            <h2>🎭 Citizen Role Box <span id="citizen-count-info">[0件]</span></h2>
+          </div>
+          <ul id="citizen-list" class="item-list"></ul>
+          <div class="box-input-area">
+            <input type="text" id="citizen-input" placeholder="Citizenの役職名を入力..." />
+            <button id="citizen-add-btn">＋ 追加</button>
+          </div>
+        </div>
+
+        <!-- Werewolfボックス -->
+        <div class="box-container card role-box-container">
+          <div class="box-header">
+            <h2>🐺 Werewolf Role Box <span id="werewolf-count-info">[0件]</span></h2>
+          </div>
+          <ul id="werewolf-list" class="item-list"></ul>
+          <div class="box-input-area">
+            <input type="text" id="werewolf-input" placeholder="Werewolfの役職名を入力..." />
+            <button id="werewolf-add-btn">＋ 追加</button>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--color-warning);">
+        <span id="total-role-count-info">[合計 0人設定中 / 現在 0人接続中]</span>
+      </div>
+
+
+
+      <div class="lobby-actions">
+        <!-- ホストのみ表示、かつサーバーから受け取った時点で表示 -->
+        <button id="game-start-btn" class="primary-btn hidden">▶ ゲーム開始</button>
+        <button id="game-rejoin-btn" class="rejoin-btn hidden">↩ ゲームに復帰</button>
+      </div>
+    </section>
+
+    <!-- ====== LOTTERY (抽選アニメーション画面) ====== -->
+    <section id="lottery-screen" class="screen hidden">
+      <div id="lottery-card" class="lottery-card card">
+        <div class="lottery-card-inner">
+          <div class="lottery-card-front">
+            <!-- 抽選完了時、ここにミッションが表示される -->
+            <h2 id="lottery-mission-text"></h2>
+          </div>
+          <div class="lottery-card-back">
+            <div class="slot-machine">
+              <ul id="slot-reel">
+                <!-- JSで高速スクロールアニメーション用のリストを生成 -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== RESULT (リザルト画面) ====== -->
+    <section id="result-screen" class="screen hidden">
+      <div class="result-content card">
+        <h3>全プレイヤー共通ミッション</h3>
+        <p id="result-mission-text" class="result-mission">ミッション内容</p>
+        
+        <hr class="result-divider" />
+        
+        <h3>あなたのロール</h3>
+        <!-- ロールがある場合とない場合（スナップショット外）で表示を分ける -->
+        <h1 id="result-role-text" class="result-role">あなたの役職</h1>
+        <p id="result-no-role-text" class="result-role hidden">※今回は参加していません</p>
+        
+        <div class="result-actions">
+          <!-- ホストのみ表示 -->
+          <button id="game-reset-btn" class="secondary-btn hidden">◀ ロビーに戻る</button>
+          <p id="waiting-reset-text" class="waiting-text hidden">ホストがリセットするのを待っています...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- モーダルダイアログコンテナ -->
+  <div id="modal-container" class="modal-overlay hidden">
+    <div class="modal-content card">
+      <h3 id="modal-title">タイトル</h3>
+      <div id="modal-body">本文</div>
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="secondary-btn">キャンセル</button>
+        <button id="modal-confirm-btn" class="primary-btn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
